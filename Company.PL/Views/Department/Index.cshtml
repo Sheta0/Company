@@ -4,7 +4,6 @@
     ViewData["Title"] = "All Departments";
 }
 
-
 <h1 class="text-center my-4">All Departments</h1>
 <div class="text-end mb-3">
     <a class="btn btn-primary" asp-action="Create">Create Department</a>
@@ -31,13 +30,13 @@
                     <td>@department.Name</td>
                     <td>@department.CreateAt</td>
                     <td>
-                        <a class="btn btn-info" asp-action="Details" asp-route-id="@Model">Details</a>
+                        <a class="btn btn-info" asp-action="Details" asp-route-id="@department.Id">Details</a>
                     </td>
                     <td>
-                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model">Update</a>
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@department.Id">Update</a>
                     </td>
                     <td>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model">Delete</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@department.Id">Delete</a>
                     </td>
                 </tr>
             }

@@ -47,5 +47,25 @@ namespace Company.PL.Controllers
             }
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult Details(int? id)
+        {
+            if (id is null)
+                return BadRequest();
+            var department = _departmentRepository.Get(id.Value);
+
+            if (department is null)
+                return NotFound();
+
+            var departmentDTO = new DepartmentDTO
+            {
+                Code = department.Code,
+                Name = department.Name,
+                CreateAt = department.CreateAt
+            };
+
+            return View(departmentDTO);
+        }
     }
 }
