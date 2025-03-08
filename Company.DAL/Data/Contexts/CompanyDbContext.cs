@@ -11,6 +11,10 @@ namespace Company.DAL.Data.Contexts
 {
     public class CompanyDbContext : DbContext
     {
+        public CompanyDbContext(DbContextOptions<CompanyDbContext> options) : base(options)
+        {
+            
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -18,10 +22,10 @@ namespace Company.DAL.Data.Contexts
             base.OnModelCreating(modelBuilder);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server = .; Database = CompanyDb; Trusted_Connection = True; TrustServerCertificate = True");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server = .; Database = CompanyDb; Trusted_Connection = True; TrustServerCertificate = True;");
+        //}
 
         public DbSet<Department> Departments { get; set; }
     }
