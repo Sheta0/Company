@@ -10,8 +10,7 @@ namespace Company.DAL.Models
     public class Employee : BaseEntity 
     {
 
-        [Required]
-        [MaxLength(50)]
+
         public string Name { get; set; }
 
         public int? Age { get; set; }
@@ -22,7 +21,6 @@ namespace Company.DAL.Models
         
         public string Phone { get; set; }
 
-        [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
 
         public bool IsActive { get; set; }

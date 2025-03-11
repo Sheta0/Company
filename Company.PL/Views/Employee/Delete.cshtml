@@ -1,0 +1,20 @@
+﻿@model Employee
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="text-center my-4">Delete Employee</h1>
+
+<div class="container">
+    <form asp-action="Delete">
+        <div asp-validation-summary="All"></div> @*List All Form Error Messages*@
+        <partial name="PartialViews/_DetailsDeleteEmployeePartialView" />
+
+        <div class="d-flex justify-content-start gap-3">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a asp-action="Index"class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+

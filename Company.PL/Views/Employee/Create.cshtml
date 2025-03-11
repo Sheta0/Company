@@ -1,0 +1,24 @@
+﻿@model EmployeeDTO
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="text-center my-4">Create Employee</h1>
+<div class="container">
+    <form enctype="multipart/form-data" asp-action="Create">
+        <div asp-validation-summary="All"></div>
+
+        <partial name="PartialViews/_CreateEditEmployeePartialView" />
+
+        <div class="d-flex justify-content-start gap-3 my-4">
+            <input type="submit" value="Submit" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-light">Back to List</a>
+        </div>
+    </form>
+</div>
+
+
+@section ValidationScriptSection {
+    <partial name="_ValidationScriptsPartial" />
+}
