@@ -1,4 +1,4 @@
-﻿@model DepartmentDTO
+﻿@model Department
 
 @{
     ViewData["Title"] = "Details";
@@ -20,5 +20,6 @@
     </div>
 </div>
 <div class="d-flex justify-content-start gap-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
     <a asp-action="Index" class="btn btn-light">Back to List</a>
 </div>
