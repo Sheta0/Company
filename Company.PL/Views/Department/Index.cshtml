@@ -29,15 +29,7 @@
                     <td>@department.Code</td>
                     <td>@department.Name</td>
                     <td>@department.CreateAt</td>
-                    <td>
-                        <a class="btn btn-info" asp-action="Details" asp-route-id="@department.Id">Details</a>
-                    </td>
-                    <td>
-                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@department.Id">Update</a>
-                    </td>
-                    <td>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@department.Id">Delete</a>
-                    </td>
+                    <partial name="_ButtonsPartialView" model="department.Id" />
                 </tr>
             }
         </tbody>
