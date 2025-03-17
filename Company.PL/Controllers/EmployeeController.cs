@@ -15,9 +15,14 @@ namespace Company.PL.Controllers
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
         }
-        public IActionResult Index()
+        public IActionResult Index(string? SearchInput)
         {
-            var employees = _employeeRepository.GetAll();
+            IEnumerable<Employee> employees;
+
+            if (string.IsNullOrEmpty(SearchInput))
+                employees = _employeeRepository.GetAll();
+            else
+                employees = _employeeRepository.GetByName(SearchInput);
             //// Dictionary : 3 Properties
             //// 1.ViewData : Transfer Data from Controller (Action) to View
             //ViewData["Message"] = "Hello From ViewData!";
@@ -26,8 +31,6 @@ namespace Company.PL.Controllers
             //ViewBag.Message = new { Message = "Hello From ViewBag!" };
 
             // 3.TempData 
-
-
 
             return View(employees);
         }
@@ -65,7 +68,7 @@ namespace Company.PL.Controllers
                     return RedirectToAction("Index");
                 }
             }
-                
+
             return View(model);
         }
 
@@ -110,7 +113,7 @@ namespace Company.PL.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete([FromRoute] int id, Employee employee)
         {
-            if(id != employee.Id)
+            if (id != employee.Id)
                 return BadRequest("Invalid Id");
             var count = _employeeRepository.Delete(employee);
             if (count > 0)
