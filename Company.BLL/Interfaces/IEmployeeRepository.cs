@@ -9,6 +9,6 @@ namespace Company.BLL.Interfaces
 {
     public interface IEmployeeRepository : IGenericRepository<Employee>
     {
-        //Employee? GetByName(string name);
+        List<Employee> GetByName(string name);
     }
 }

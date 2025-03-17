@@ -11,6 +11,18 @@
 
 <h1 class="text-center my-4">All Employees</h1>
 
+<div class="row justify-content-center align-items-center mb-3">
+    <form asp-action="Index" class="row col-8 offset-1">
+        <div class="col-8">
+            <input type="text" class="form-control" id="SearchInput" name="SearchInput" placeholder="Search By Name..." />
+        </div>
+        <div class="col-4">
+            <input type="submit" value="Search" class="btn btn-success" />
+        </div>
+    </form>
+</div>
+
+
 @* <div class="alert alert-danger">
     @ViewData["Message"]
 </div>
@@ -20,11 +32,11 @@
     @ViewBag.Message
 </div> *@
 
-@if(!string.IsNullOrEmpty(TempData["Message"] as string))
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
-<div class="alert alert-info">
-    @TempData["Message"]
-</div>
+    <div class="alert alert-info">
+        @TempData["Message"]
+    </div>
 }
 
 
@@ -33,56 +45,57 @@
 </div>
 
 
-@if(Model.Count() > 0) 
+
+@if (Model.Count() > 0)
 {
-    <table class="table table-striped table-bordered table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>@Html.DisplayNameFor(E => E.Name)</th>
-                <th>@Html.DisplayNameFor(E => E.Age)</th>
-                <th>@Html.DisplayNameFor(E => E.Email)</th>
-                <th>@Html.DisplayNameFor(E => E.Address)</th>
-                <th>@Html.DisplayNameFor(E => E.Phone)</th>
-                <th>@Html.DisplayNameFor(E => E.Salary)</th>
-                <th>@Html.DisplayNameFor(E => E.IsActive)</th>
-                <th>@Html.DisplayNameFor(E => E.IsDeleted)</th>
-                <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
-                <th>@Html.DisplayNameFor(E => E.CreateAt)</th>
-                <th>@Html.DisplayNameFor(E => E.DepartmentId)</th>
-                <th>Details</th>
-                <th>Update</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var employee in Model)
-            {
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="table-dark">
                 <tr>
-                    <td>@employee.Name</td>
-                    <td>@employee.Age</td>
-                    <td>@employee.Email</td>
-                    <td>@employee.Address</td>
-                    <td>@employee.Phone</td>
-                    <td>@Html.DisplayFor(M => employee.Salary)</td>
-                    <td>@employee.IsActive</td>
-                    <td>@employee.IsDeleted</td>
-                    <td>@employee.HiringDate</td>
-                    <td>@employee.CreateAt</td>
-                    @if (employee.Department is not null)
-                    {
-                        <td>@employee.Department.Name</td>
-                    }
-                    else
-                    {
-                        <td>No Department</td>
-                    })
-                    <partial name="_ButtonsPartialView" model="@employee.Id" />
+                    <th>@Html.DisplayNameFor(E => E.Name)</th>
+                    <th>@Html.DisplayNameFor(E => E.Age)</th>
+                    <th>@Html.DisplayNameFor(E => E.Email)</th>
+                    <th>@Html.DisplayNameFor(E => E.Address)</th>
+                    <th>@Html.DisplayNameFor(E => E.Phone)</th>
+                    <th>@Html.DisplayNameFor(E => E.Salary)</th>
+                    <th>@Html.DisplayNameFor(E => E.IsActive)</th>
+                    <th>@Html.DisplayNameFor(E => E.IsDeleted)</th>
+                    <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
+                    <th>@Html.DisplayNameFor(E => E.CreateAt)</th>
+                    <th>@Html.DisplayNameFor(E => E.DepartmentId)</th>
+                    <th>Details</th>
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var employee in Model)
+                {
+                    <tr>
+                        <td>@employee.Name</td>
+                        <td>@employee.Age</td>
+                        <td>@employee.Email</td>
+                        <td>@employee.Address</td>
+                        <td>@employee.Phone</td>
+                        <td>@Html.DisplayFor(M => employee.Salary)</td>
+                        <td>@employee.IsActive</td>
+                        <td>@employee.IsDeleted</td>
+                        <td>@employee.HiringDate</td>
+                        <td>@employee.CreateAt</td>
+                        @if (employee.Department is not null)
+                        {
+                            <td>@employee.Department.Name</td>
+                        }
+                        else
+                        {
+                            <td>No Department</td>
+                        }
+                        <partial name="_ButtonsPartialView" model="@employee.Id" />
+                    </tr>
+                }
+            </tbody>
+        </table>
 }
-else 
+else
 {
     <div class="mt-4 alert alert-warning">
         <h3>There is NO Employees</h3>
