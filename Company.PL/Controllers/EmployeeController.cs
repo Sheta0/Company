@@ -1,4 +1,5 @@
-﻿using Company.BLL.Interfaces;
+﻿using AutoMapper;
+using Company.BLL.Interfaces;
 using Company.DAL.Models;
 using Company.PL.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +10,17 @@ namespace Company.PL.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository)
+        public EmployeeController(
+            IEmployeeRepository employeeRepository,
+            IDepartmentRepository departmentRepository,
+            IMapper mapper
+            )
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
         public IActionResult Index(string? SearchInput)
         {
@@ -48,19 +55,22 @@ namespace Company.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var employee = new Employee
-                {
-                    Name = model.Name,
-                    Age = model.Age,
-                    Email = model.Email,
-                    Address = model.Address,
-                    Phone = model.Phone,
-                    Salary = model.Salary,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    HiringDate = model.HiringDate,
-                    DepartmentId = model.DepartmentId
-                };
+                // Manual Mapping
+                //var employee = new Employee
+                //{
+                //    Name = model.Name,
+                //    Age = model.Age,
+                //    Email = model.Email,
+                //    Address = model.Address,
+                //    Phone = model.Phone,
+                //    Salary = model.Salary,
+                //    IsActive = model.IsActive,
+                //    IsDeleted = model.IsDeleted,
+                //    HiringDate = model.HiringDate,
+                //    DepartmentId = model.DepartmentId
+                //};
+
+                var employee = _mapper.Map<Employee>(model);
                 var count = _employeeRepository.Add(employee);
                 if (count > 0)
                 {
@@ -81,7 +91,9 @@ namespace Company.PL.Controllers
             var employee = _employeeRepository.Get(id.Value);
             if (employee is null)
                 return NotFound(new { statusCode = 404, message = $"Employee with id {id} Not Found" });
-            return View(viewName, employee);
+
+            var dto = _mapper.Map<EmployeeDTO>(employee);
+            return View(viewName, dto);
         }
 
         public IActionResult Edit(int? id)
@@ -91,17 +103,21 @@ namespace Company.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit([FromRoute] int id, EmployeeDTO model)
         {
             if (ModelState.IsValid)
             {
-                if (id != employee.Id)
+                if (id != model.Id)
                     return BadRequest("Invalid Id");
+
+                var employee = _mapper.Map<Employee>(model);
                 var count = _employeeRepository.Update(employee);
                 if (count > 0)
                     return RedirectToAction("Index");
             }
-            return View(employee);
+
+
+            return View(model);
         }
 
         public IActionResult Delete(int? id)
@@ -115,6 +131,7 @@ namespace Company.PL.Controllers
         {
             if (id != employee.Id)
                 return BadRequest("Invalid Id");
+
             var count = _employeeRepository.Delete(employee);
             if (count > 0)
                 return RedirectToAction("Index");
