@@ -9,17 +9,17 @@ namespace Company.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IDepartmentRepository _departmentRepository;
+        //private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
 
         public EmployeeController(
             IEmployeeRepository employeeRepository,
-            IDepartmentRepository departmentRepository,
+            //IDepartmentRepository departmentRepository,
             IMapper mapper
             )
         {
             _employeeRepository = employeeRepository;
-            _departmentRepository = departmentRepository;
+            //_departmentRepository = departmentRepository;
             _mapper = mapper;
         }
         public IActionResult Index(string? SearchInput)
@@ -44,8 +44,8 @@ namespace Company.PL.Controllers
 
         public IActionResult Create()
         {
-            var departments = _departmentRepository.GetAll();
-            ViewBag.Departments = departments;
+            //var departments = _departmentRepository.GetAll();
+            //ViewBag.Departments = departments;
             return View();
         }
 
@@ -84,8 +84,8 @@ namespace Company.PL.Controllers
 
         public IActionResult Details(int? id, string viewName = "Details")
         {
-            var departments = _departmentRepository.GetAll();
-            ViewBag.Departments = departments;
+            //var departments = _departmentRepository.GetAll();
+            //ViewBag.Departments = departments;
             if (id is null)
                 return BadRequest("Invalid Id");
             var employee = _employeeRepository.Get(id.Value);

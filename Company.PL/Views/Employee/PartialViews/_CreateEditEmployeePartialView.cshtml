@@ -1,7 +1,10 @@
 ﻿@model EmployeeDTO
 
+@inject IDepartmentRepository _departmentRepository
+
 @{
-    var Departments = new SelectList(ViewBag.Departments as List<Department>, "Id", "Name");
+    // var Departments = new SelectList(ViewBag.Departments as List<Department>, "Id", "Name");
+    var Departments = new SelectList(_departmentRepository.GetAll(), "Id", "Name");
 }
 
 <div class="form-group">
