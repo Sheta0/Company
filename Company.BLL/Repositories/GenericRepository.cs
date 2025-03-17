@@ -20,10 +20,16 @@ namespace Company.BLL.Repositories
         }
         public IEnumerable<T> GetAll()
         {
+            if(typeof(T) == typeof(Employee))
+                return (IEnumerable<T>) _context.Employees.Include(E => E.Department).ToList();
+
             return _context.Set<T>().ToList();
         }
         public T? Get(int id)
         {
+            if (typeof(T) == typeof(Employee))
+                return _context.Employees.Include(E => E.Department).FirstOrDefault(E => E.Id == id) as T;
+
             return _context.Set<T>().Find(id);
         }
 
