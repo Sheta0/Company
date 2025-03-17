@@ -5,8 +5,10 @@ namespace Company.PL.DTOs
 {
     public class EmployeeDTO
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Name is Required!")]
-        public string Name { get; set; }
+        public string EmpName { get; set; }
 
         [Range(18, 60, ErrorMessage = "Age must be between 18 and 60")]
         public int? Age { get; set; }
@@ -31,5 +33,8 @@ namespace Company.PL.DTOs
         [DisplayName("Date Of Creation")]
         public DateTime CreateAt { get; set; }
         public int? DepartmentId { get; set; }
+
+
+        public string? DepartmentName { get; set; }
     }
 }

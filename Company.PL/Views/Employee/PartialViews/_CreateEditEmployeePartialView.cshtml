@@ -1,14 +1,13 @@
-﻿@model Employee
+﻿@model EmployeeDTO
 
 @{
     var Departments = new SelectList(ViewBag.Departments as List<Department>, "Id", "Name");
-
 }
 
 <div class="form-group">
-    <label class="col-form-label" asp-for="Name"></label>
-    <input asp-for="Name" class="form-control" />
-    <span asp-validation-for="Name" class="text-danger"></span>
+    <label class="col-form-label" asp-for="EmpName"></label>
+    <input asp-for="EmpName" class="form-control" />
+    <span asp-validation-for="EmpName" class="text-danger"></span>
 </div>
 
 <div class="form-group">
@@ -41,7 +40,7 @@
     <span asp-validation-for="Salary" class="text-danger"></span>
 </div>
 
-<div class="form-group ">
+<div class="form-group">
     <input asp-for="IsActive" class="form-check" />
     <label class="col-form-label" asp-for="IsActive"></label>
 </div>
@@ -66,7 +65,6 @@
 <div class="form-group">
     <label class="col-form-label" asp-for="DepartmentId"></label>
     <select asp-for="DepartmentId" asp-items="Departments" class="form-control">
-        <option value="@null">Select Department</option>
+        <option value="">Select Department</option>
     </select>
 </div>
-
