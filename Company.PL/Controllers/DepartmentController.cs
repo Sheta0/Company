@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Company.PL.DTOs;
 using Company.DAL.Models;
 using AutoMapper;
+using System.Threading.Tasks;
 
 namespace Company.PL.Controllers
 {
@@ -28,9 +29,9 @@ namespace Company.PL.Controllers
         }
 
         [HttpGet] // GET: Department/Index
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var departments = _unitOfWork.DepartmentRepository.GetAll();
+            var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
             return View(departments);
         }
 
@@ -42,13 +43,13 @@ namespace Company.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(DepartmentDTO model)
+        public async Task<IActionResult> Create(DepartmentDTO model)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
                 var department = _mapper.Map<Department>(model);
-                _unitOfWork.DepartmentRepository.Add(department);
-                var count = _unitOfWork.Complete();
+                await _unitOfWork.DepartmentRepository.AddAsync(department);
+                var count = await _unitOfWork.CompleteAsync();
 
                 if (count > 0)
                     return RedirectToAction("Index");
@@ -57,12 +58,12 @@ namespace Company.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (id is null)
                 return BadRequest("Invalid Id"); // 400
 
-            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
+            var department = await _unitOfWork.DepartmentRepository.GetAsync(id.Value);
 
             if (department is null)
                 return NotFound(new {statusCode = 404, message = $"Department with Id {id} is not found"});
@@ -72,7 +73,7 @@ namespace Company.PL.Controllers
             return View(viewName, dto);
         }
 
-        public IActionResult Edit(int? id)
+        public Task<IActionResult> Edit(int? id)
         {
             //if (id is null)
             //    return BadRequest("Invalid Id"); // 400
@@ -87,14 +88,14 @@ namespace Company.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id, DepartmentDTO model)
+        public async Task<IActionResult> Edit([FromRoute]int id, DepartmentDTO model)
         {
             if (ModelState.IsValid)
             {
                 if(id != model.Id) return BadRequest(); // 400
                 var department = _mapper.Map<Department>(model);
                 _unitOfWork.DepartmentRepository.Update(department);
-                var count = _unitOfWork.Complete();
+                var count = await _unitOfWork.CompleteAsync();
 
                 if (count > 0)
                     return RedirectToAction("Index");
@@ -102,7 +103,7 @@ namespace Company.PL.Controllers
             return View(model);
         }
 
-        public IActionResult Delete (int id)
+        public Task<IActionResult> Delete (int id)
         {
             //var department = _departmentRepository.Get(id);
             //if (department is null)
@@ -112,14 +113,14 @@ namespace Company.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, DepartmentDTO model)
+        public async Task<IActionResult> Delete([FromRoute] int id, DepartmentDTO model)
         {
             if (ModelState.IsValid) 
             {
                 if (id != model.Id) return BadRequest(); // 400
                 var department = _mapper.Map<Department>(model);
                 _unitOfWork.DepartmentRepository.Delete(department);
-                var count = _unitOfWork.Complete();
+                var count = await _unitOfWork.CompleteAsync();
 
                 if (count > 0)
                     return RedirectToAction("Index");

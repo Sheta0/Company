@@ -64,3 +64,23 @@ namespace Company.PL
         }
     }
 }
+
+class Test
+{
+    public void Fun01()
+    {
+        // Statement 01
+        // Statement 02
+        // await // Statement 03 => Take Time
+        // Statement 04
+        // Statement 05
+    }
+    public void Fun02()
+    {
+        // Statement 01
+        // Statement 02
+        // Statement 03
+        // Statement 04
+        // Statement 05
+    }
+}
