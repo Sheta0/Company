@@ -3,6 +3,7 @@ using Company.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Company.PL.DTOs;
 using Company.DAL.Models;
+using AutoMapper;
 
 namespace Company.PL.Controllers
 {
@@ -10,11 +11,13 @@ namespace Company.PL.Controllers
     public class DepartmentController : Controller
     {
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
 
         // Ask CLR to create an object of DepartmentRepository
-        public DepartmentController(IDepartmentRepository departmentRepository)
+        public DepartmentController(IDepartmentRepository departmentRepository, IMapper mapper)
         {
             _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
 
         [HttpGet] // GET: Department/Index
@@ -36,12 +39,7 @@ namespace Company.PL.Controllers
         {
             if (ModelState.IsValid) // Server Side Validation
             {
-                var department = new Department
-                {
-                    Code = model.Code,
-                    Name = model.Name,
-                    CreateAt = model.CreateAt
-                };
+                var department = _mapper.Map<Department>(model);
                 var count = _departmentRepository.Add(department);
                 if (count > 0)
                     return RedirectToAction("Index");
@@ -60,7 +58,9 @@ namespace Company.PL.Controllers
             if (department is null)
                 return NotFound(new {statusCode = 404, message = $"Department with Id {id} is not found"});
 
-            return View(viewName, department);
+            var dto = _mapper.Map<DepartmentDTO>(department);
+
+            return View(viewName, dto);
         }
 
         public IActionResult Edit(int? id)
@@ -78,16 +78,17 @@ namespace Company.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id, Department department)
+        public IActionResult Edit([FromRoute]int id, DepartmentDTO model)
         {
             if (ModelState.IsValid)
             {
-                if(id != department.Id) return BadRequest(); // 400
+                if(id != model.Id) return BadRequest(); // 400
+                var department = _mapper.Map<Department>(model);
                 var count = _departmentRepository.Update(department);
                 if (count > 0)
                     return RedirectToAction("Index");
             }
-            return View(department);
+            return View(model);
         }
 
         public IActionResult Delete (int id)
@@ -104,13 +105,8 @@ namespace Company.PL.Controllers
         {
             if (ModelState.IsValid) 
             {
-                var department = new Department
-                {
-                    Id = id,
-                    Code = model.Code,
-                    Name = model.Name,
-                    CreateAt = model.CreateAt
-                };
+                if (id != model.Id) return BadRequest(); // 400
+                var department = _mapper.Map<Department>(model);
                 var count = _departmentRepository.Delete(department);
                 if (count > 0)
                     return RedirectToAction("Index");
