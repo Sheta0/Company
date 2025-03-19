@@ -27,6 +27,7 @@ namespace Company.PL
 
             //builder.Services.AddAutoMapper(typeof(EmployeeProfile)); // Register DI for AutoMapper
             builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile())); // Register DI for AutoMapper
+            builder.Services.AddAutoMapper(M => M.AddProfile(new DepartmentProfile())); // Register DI for AutoMapper
 
 
             //builder.Services.AddScoped();    // Create Object Life Time Per Request - Unreachable Object
