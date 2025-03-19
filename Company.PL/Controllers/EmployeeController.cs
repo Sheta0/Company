@@ -2,6 +2,7 @@
 using Company.BLL.Interfaces;
 using Company.DAL.Models;
 using Company.PL.DTOs;
+using Company.PL.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.PL.Controllers
@@ -59,13 +60,18 @@ namespace Company.PL.Controllers
         {
             if (ModelState.IsValid)
             {
- 
+                if (model.Image is not null)
+                    model.ImageName = FileSettings.UploadFile(model.Image, "images");
+
                 var employee = _mapper.Map<Employee>(model);
                 _unitOfWork.EmployeeRepository.Add(employee);
+
                 var count = _unitOfWork.Complete();
                 if (count > 0)
                 {
+
                     TempData["Message"] = "Employee Added Successfully!";
+
                     return RedirectToAction("Index");
                 }
             }
@@ -98,8 +104,16 @@ namespace Company.PL.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 if (id != model.Id)
                     return BadRequest("Invalid Id");
+
+                if (model.ImageName is not null && model.Image is not null)
+                    FileSettings.DeleteFile(model.ImageName, "images");
+
+                if (model.Image is not null)
+                    model.ImageName = FileSettings.UploadFile(model.Image, "images");
+
 
                 var employee = _mapper.Map<Employee>(model);
                 _unitOfWork.EmployeeRepository.Update(employee);
@@ -129,7 +143,12 @@ namespace Company.PL.Controllers
             var count = _unitOfWork.Complete();
 
             if (count > 0)
+            {
+                if (model.ImageName is not null)
+                    FileSettings.DeleteFile(model.ImageName, "images");
+
                 return RedirectToAction("Index");
+            }
             return View(model);
         }
     }

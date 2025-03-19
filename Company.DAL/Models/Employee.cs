@@ -36,5 +36,9 @@ namespace Company.DAL.Models
         public int? DepartmentId { get; set; }
 
         public Department? Department { get; set; }
+
+        [DisplayName("Image")]
+
+        public string? ImageName { get; set; }
     }
 }

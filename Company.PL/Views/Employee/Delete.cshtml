@@ -10,6 +10,8 @@
     <form asp-action="Delete">
         <partial name="PartialViews/_DetailsDeleteEmployeePartialView" />
 
+        <input hidden asp-for="ImageName" />
+
         <div class="d-flex justify-content-start gap-3">
             <input type="submit" value="Delete" class="btn btn-danger" />
             <a asp-action="Index"class="btn btn-secondary">Cancel</a>

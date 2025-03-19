@@ -48,52 +48,56 @@
 
 @if (Model.Count() > 0)
 {
-        <table class="table table-striped table-bordered table-hover">
-            <thead class="table-dark">
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(E => E.ImageName)</th>
+                <th>@Html.DisplayNameFor(E => E.Name)</th>
+                <th>@Html.DisplayNameFor(E => E.Age)</th>
+                <th>@Html.DisplayNameFor(E => E.Email)</th>
+                <th>@Html.DisplayNameFor(E => E.Address)</th>
+                <th>@Html.DisplayNameFor(E => E.Phone)</th>
+                <th>@Html.DisplayNameFor(E => E.Salary)</th>
+                <th>@Html.DisplayNameFor(E => E.IsActive)</th>
+                <th>@Html.DisplayNameFor(E => E.IsDeleted)</th>
+                <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
+                <th>@Html.DisplayNameFor(E => E.CreateAt)</th>
+                <th>@Html.DisplayNameFor(E => E.DepartmentId)</th>
+                <th>Details</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model)
+            {
                 <tr>
-                    <th>@Html.DisplayNameFor(E => E.Name)</th>
-                    <th>@Html.DisplayNameFor(E => E.Age)</th>
-                    <th>@Html.DisplayNameFor(E => E.Email)</th>
-                    <th>@Html.DisplayNameFor(E => E.Address)</th>
-                    <th>@Html.DisplayNameFor(E => E.Phone)</th>
-                    <th>@Html.DisplayNameFor(E => E.Salary)</th>
-                    <th>@Html.DisplayNameFor(E => E.IsActive)</th>
-                    <th>@Html.DisplayNameFor(E => E.IsDeleted)</th>
-                    <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
-                    <th>@Html.DisplayNameFor(E => E.CreateAt)</th>
-                    <th>@Html.DisplayNameFor(E => E.DepartmentId)</th>
-                    <th>Details</th>
-                    <th>Update</th>
-                    <th>Delete</th>
+                    <td>
+                        <img src="~/files/images/@employee.ImageName" class="img-fluid w-100 h-100" />
+                    </td>
+                    <td>@employee.Name</td>
+                    <td>@employee.Age</td>
+                    <td>@employee.Email</td>
+                    <td>@employee.Address</td>
+                    <td>@employee.Phone</td>
+                    <td>@Html.DisplayFor(M => employee.Salary)</td>
+                    <td>@employee.IsActive</td>
+                    <td>@employee.IsDeleted</td>
+                    <td>@employee.HiringDate</td>
+                    <td>@employee.CreateAt</td>
+                    @if (employee.Department is not null)
+                    {
+                        <td>@employee.Department.Name</td>
+                    }
+                    else
+                    {
+                        <td>No Department</td>
+                    }
+                    <partial name="_ButtonsPartialView" model="@employee.Id" />
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var employee in Model)
-                {
-                    <tr>
-                        <td>@employee.Name</td>
-                        <td>@employee.Age</td>
-                        <td>@employee.Email</td>
-                        <td>@employee.Address</td>
-                        <td>@employee.Phone</td>
-                        <td>@Html.DisplayFor(M => employee.Salary)</td>
-                        <td>@employee.IsActive</td>
-                        <td>@employee.IsDeleted</td>
-                        <td>@employee.HiringDate</td>
-                        <td>@employee.CreateAt</td>
-                        @if (employee.Department is not null)
-                        {
-                            <td>@employee.Department.Name</td>
-                        }
-                        else
-                        {
-                            <td>No Department</td>
-                        }
-                        <partial name="_ButtonsPartialView" model="@employee.Id" />
-                    </tr>
-                }
-            </tbody>
-        </table>
+            }
+        </tbody>
+    </table>
 }
 else
 {
