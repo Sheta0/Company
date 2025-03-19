@@ -33,22 +33,19 @@ namespace Company.BLL.Repositories
             return _context.Set<T>().Find(id);
         }
 
-        public int Add(T model)
+        public void Add(T model)
         {
             _context.Set<T>().Add(model);
-            return _context.SaveChanges();
         }
 
-        public int Update(T model)
+        public void Update(T model)
         {
             _context.Set<T>().Update(model);
-            return _context.SaveChanges();
         }
 
-        public int Delete(T model)
+        public void Delete(T model)
         {
             _context.Set<T>().Remove(model);
-            return _context.SaveChanges();
         }
     }
 }

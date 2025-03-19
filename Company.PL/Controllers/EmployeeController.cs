@@ -8,17 +8,21 @@ namespace Company.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
+
+        private readonly IUnitOfWork _unitOfWork;
+        //private readonly IEmployeeRepository _employeeRepository;
         //private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
 
         public EmployeeController(
-            IEmployeeRepository employeeRepository,
+            //IEmployeeRepository employeeRepository,
             //IDepartmentRepository departmentRepository,
+            IUnitOfWork unitOfWork,
             IMapper mapper
             )
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
+            //_employeeRepository = employeeRepository;
             //_departmentRepository = departmentRepository;
             _mapper = mapper;
         }
@@ -27,9 +31,9 @@ namespace Company.PL.Controllers
             IEnumerable<Employee> employees;
 
             if (string.IsNullOrEmpty(SearchInput))
-                employees = _employeeRepository.GetAll();
+                employees = _unitOfWork.EmployeeRepository.GetAll();
             else
-                employees = _employeeRepository.GetByName(SearchInput);
+                employees = _unitOfWork.EmployeeRepository.GetByName(SearchInput);
             //// Dictionary : 3 Properties
             //// 1.ViewData : Transfer Data from Controller (Action) to View
             //ViewData["Message"] = "Hello From ViewData!";
@@ -55,23 +59,9 @@ namespace Company.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Manual Mapping
-                //var employee = new Employee
-                //{
-                //    Name = model.Name,
-                //    Age = model.Age,
-                //    Email = model.Email,
-                //    Address = model.Address,
-                //    Phone = model.Phone,
-                //    Salary = model.Salary,
-                //    IsActive = model.IsActive,
-                //    IsDeleted = model.IsDeleted,
-                //    HiringDate = model.HiringDate,
-                //    DepartmentId = model.DepartmentId
-                //};
-
                 var employee = _mapper.Map<Employee>(model);
-                var count = _employeeRepository.Add(employee);
+                _unitOfWork.EmployeeRepository.Add(employee);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                 {
                     TempData["Message"] = "Employee Added Successfully!";
@@ -88,7 +78,7 @@ namespace Company.PL.Controllers
             //ViewBag.Departments = departments;
             if (id is null)
                 return BadRequest("Invalid Id");
-            var employee = _employeeRepository.Get(id.Value);
+            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
             if (employee is null)
                 return NotFound(new { statusCode = 404, message = $"Employee with id {id} Not Found" });
 
@@ -107,11 +97,12 @@ namespace Company.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (id != model.Id)
-                    return BadRequest("Invalid Id");
-
                 var employee = _mapper.Map<Employee>(model);
-                var count = _employeeRepository.Update(employee);
+                employee.Id = id;
+
+                _unitOfWork.EmployeeRepository.Update(employee);
+
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                     return RedirectToAction("Index");
             }
@@ -127,15 +118,18 @@ namespace Company.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Employee employee)
+        public IActionResult Delete([FromRoute] int id, EmployeeDTO model)
         {
-            if (id != employee.Id)
-                return BadRequest("Invalid Id");
+            
+            var employee = _mapper.Map<Employee>(model);
+            employee.Id = id;
 
-            var count = _employeeRepository.Delete(employee);
+            _unitOfWork.EmployeeRepository.Delete(employee);
+
+            var count = _unitOfWork.Complete();
             if (count > 0)
                 return RedirectToAction("Index");
-            return View(employee);
+            return View(model);
         }
     }
 }
