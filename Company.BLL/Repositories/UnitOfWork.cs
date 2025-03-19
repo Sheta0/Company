@@ -23,14 +23,10 @@ namespace Company.BLL.Repositories
             DepartmentRepository = new DepartmentRepository(_context);
         }
 
-        public int Complete()
-        {
-            return _context.SaveChanges();
-        }
+        public async Task<int> CompleteAsync()
+            => await _context.SaveChangesAsync();
 
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
+        public async ValueTask DisposeAsync()
+            => await _context.DisposeAsync();
     }
 }
