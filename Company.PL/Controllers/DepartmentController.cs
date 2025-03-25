@@ -5,10 +5,12 @@ using Company.PL.DTOs;
 using Company.DAL.Models;
 using AutoMapper;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Company.PL.Controllers
 {
     // MVC Controller
+    [Authorize]
     public class DepartmentController : Controller
     {
         //private readonly IDepartmentRepository _departmentRepository;
