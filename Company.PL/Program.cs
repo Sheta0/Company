@@ -4,6 +4,7 @@ using Company.DAL.Data.Contexts;
 using Company.DAL.Models;
 using Company.PL.Mapping;
 using Company.PL.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.PL
@@ -40,6 +41,14 @@ namespace Company.PL
             builder.Services.AddTransient<ITransientService, TransientService>(); // Per Operation
             builder.Services.AddSingleton<ISingletonService, SingletonService>(); // Per Application
 
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                .AddEntityFrameworkStores<CompanyDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SignIn";
+            });
+
 
             var app = builder.Build();
 
@@ -54,7 +63,11 @@ namespace Company.PL
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
