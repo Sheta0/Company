@@ -2,16 +2,20 @@
 using Company.PL.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Company.PL.Controllers
 {
     public class RoleController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public RoleController(RoleManager<IdentityRole> roleManager)
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index(string? SearchInput)
         {
@@ -151,5 +155,63 @@ namespace Company.PL.Controllers
             }
             return View(model);
         }
+
+        public async Task<IActionResult> AddOrRemoveUsers(string roleId)
+        {
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role is null)
+                return NotFound(new { statusCode = 404, message = $"Role with id {roleId} was not found" });
+
+            ViewData["RoleId"] = roleId;
+
+            var usersInRole = new List<UsersInRoleDTO>();
+            var users = await _userManager.Users.ToListAsync();
+            foreach (var user in users)
+            {
+                usersInRole.Add(new UsersInRoleDTO()
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    IsSelected = await _userManager.IsInRoleAsync(user, role.Name)
+                });
+            }
+
+            return View(usersInRole);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddOrRemoveUsers(string roleId, List<UsersInRoleDTO> users)
+        {
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role is null)
+                return NotFound(new { statusCode = 404, message = $"Role with id {roleId} was not found" });
+
+            if (ModelState.IsValid)
+            {
+                foreach (var user in users)
+                {
+                    var appUser = _userManager.FindByIdAsync(user.UserId).Result;
+                    if (appUser is not null)
+                    {
+                        if (user.IsSelected && !await _userManager.IsInRoleAsync(appUser, role.Name))
+                        {
+                            await _userManager.AddToRoleAsync(appUser, role.Name);
+                        }
+                        else if (!user.IsSelected && await _userManager.IsInRoleAsync(appUser, role.Name))
+                        {
+                            await _userManager.RemoveFromRoleAsync(appUser, role.Name);
+
+                        }
+
+                    }
+
+                }
+                TempData["Message"] = "Users Updated Successfully!";
+                return RedirectToAction("Edit", new { id = roleId });
+            }
+            return View(users);
+        }
+
     }
 }
