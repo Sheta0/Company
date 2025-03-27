@@ -5,6 +5,14 @@
 }
 
 <h1 class="text-center my-4">All Departments</h1>
+
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div class="alert alert-info">
+        @TempData["Message"]
+    </div>
+}
+
 <div class="text-end mb-3">
     <a class="btn btn-primary" asp-action="Create">Create Department</a>
 </div>
@@ -29,7 +37,7 @@
                     <td>@department.Code</td>
                     <td>@department.Name</td>
                     <td>@department.CreateAt</td>
-                    <partial name="_ButtonsPartialView" model="department.Id" />
+                    <partial name="_ButtonsPartialView" model="department.Id.ToString()" />
                 </tr>
             }
         </tbody>
