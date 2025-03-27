@@ -122,7 +122,10 @@ namespace Company.PL.Controllers
                 _unitOfWork.EmployeeRepository.Update(employee);
                 var count = await _unitOfWork.CompleteAsync();
                 if (count > 0)
+                {
+                    TempData["Message"] = "User Updated Successfully!";
                     return RedirectToAction("Index");
+                }
             }
 
 
@@ -149,6 +152,8 @@ namespace Company.PL.Controllers
             {
                 if (model.ImageName is not null)
                     FileSettings.DeleteFile(model.ImageName, "images");
+
+                TempData["Message"] = "User Deleted Successfully!";
 
                 return RedirectToAction("Index");
             }

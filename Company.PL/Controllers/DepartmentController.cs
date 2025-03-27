@@ -54,7 +54,10 @@ namespace Company.PL.Controllers
                 var count = await _unitOfWork.CompleteAsync();
 
                 if (count > 0)
+                {
+                    TempData["Message"] = "Department Added Successfully!";
                     return RedirectToAction("Index");
+                }
             }
             return View(model);
         }
@@ -100,7 +103,10 @@ namespace Company.PL.Controllers
                 var count = await _unitOfWork.CompleteAsync();
 
                 if (count > 0)
+                {
+                    TempData["Message"] = "Department Updated Successfully!";
                     return RedirectToAction("Index");
+                }
             }
             return View(model);
         }
@@ -125,7 +131,10 @@ namespace Company.PL.Controllers
                 var count = await _unitOfWork.CompleteAsync();
 
                 if (count > 0)
+                {
+                    TempData["Message"] = "Department Deleted Successfully!";
                     return RedirectToAction("Index");
+                }
             }
 
             return View(model);
