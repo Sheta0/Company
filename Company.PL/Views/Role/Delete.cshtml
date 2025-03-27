@@ -1,0 +1,19 @@
+﻿@model RoleToReturnDTO
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="text-center my-4">Delete Role</h1>
+
+<div class="container">
+    <form asp-action="Delete">
+        <partial name="PartialViews/_DetailsDeleteRolePartialView" />
+
+        <div class="d-flex justify-content-start gap-3">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a asp-action="Index"class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+

@@ -54,7 +54,7 @@ namespace Company.PL.Controllers
             var user = await _userManager.FindByIdAsync(id);
 
             if (user == null)
-                return NotFound($"User with id {id} was not found");
+                return NotFound(new { statusCode = 404, message = $"User with id {id} was not found" });
 
             var userToReturn = new UserToReturnDTO()
             {
@@ -86,7 +86,7 @@ namespace Company.PL.Controllers
                 var user = await _userManager.FindByIdAsync(id);
 
                 if (user == null)
-                    return NotFound($"User with id {model.Id} was not found");
+                    return NotFound(new { statusCode = 404, message = $"User with id {id} was not found" });
 
                 user.UserName = model.UserName;
                 user.FirstName = model.FirstName;
@@ -99,6 +99,7 @@ namespace Company.PL.Controllers
                     TempData["Message"] = "User Updated Successfully!";
                     return RedirectToAction("Index");
                 }
+                ModelState.AddModelError("", "Invalid Operation");
             }
             return View(model);
         }
@@ -120,7 +121,7 @@ namespace Company.PL.Controllers
                 var user = await _userManager.FindByIdAsync(id);
 
                 if (user == null)
-                    return NotFound($"User with id {model.Id} was not found");
+                    return NotFound(new { statusCode = 404, message = $"User with id {id} was not found" });
 
                 var result = await _userManager.DeleteAsync(user);
                 if (result.Succeeded)
@@ -128,6 +129,7 @@ namespace Company.PL.Controllers
                     TempData["Message"] = "User Deleted Successfully!";
                     return RedirectToAction("Index");
                 }
+                ModelState.AddModelError("", "Invalid Operation");
             }
             return View(model);
         }
