@@ -8,6 +8,7 @@
 
 <div class="container">
     <form asp-action="Edit" enctype="multipart/form-data">
+        <div asp-validation-summary="All"></div>
         <partial name="PartialViews/_CreateEditEmployeePartialView" />
         <input hidden asp-for="ImageName" />
 

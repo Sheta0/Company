@@ -1,15 +1,15 @@
-﻿@model EmployeeDTO
+﻿@model RoleToReturnDTO
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1 class="text-center my-4">Create Employee</h1>
+<h1 class="text-center my-4">Create Role</h1>
 <div class="container">
     <form asp-action="Create" enctype="multipart/form-data">
         <div asp-validation-summary="All"></div>
 
-        <partial name="PartialViews/_CreateEditEmployeePartialView" />
+        <partial name="PartialViews/_CreateEditRolePartialView" />
 
         <div class="d-flex justify-content-start gap-3 my-4">
             <input type="submit" value="Submit" class="btn btn-primary" />

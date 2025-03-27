@@ -1,15 +1,14 @@
-﻿@model EmployeeDTO
+﻿@model RoleToReturnDTO
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h1 class="text-center my-4">Create Employee</h1>
-<div class="container">
-    <form asp-action="Create" enctype="multipart/form-data">
-        <div asp-validation-summary="All"></div>
+<h1 class="text-center my-4">Edit Role</h1>
 
-        <partial name="PartialViews/_CreateEditEmployeePartialView" />
+<div class="container">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <partial name="PartialViews/_CreateEditRolePartialView" />
 
         <div class="d-flex justify-content-start gap-3 my-4">
             <input type="submit" value="Submit" class="btn btn-primary" />
@@ -17,7 +16,6 @@
         </div>
     </form>
 </div>
-
 
 @section ValidationScriptSection {
     <partial name="_ValidationScriptsPartial" />

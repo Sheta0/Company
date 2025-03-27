@@ -7,7 +7,7 @@
 <h1 class="text-center my-4">Create Department</h1>
 <div class="container">
     <form asp-action="Create">
-
+        <div asp-validation-summary="All"></div>
         <partial name="PartialViews/_CreateEditDepartmentPartialView" />
 
         <div class="d-flex justify-content-start gap-3">
