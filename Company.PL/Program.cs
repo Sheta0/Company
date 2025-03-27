@@ -42,7 +42,8 @@ namespace Company.PL
             builder.Services.AddSingleton<ISingletonService, SingletonService>(); // Per Application
 
             builder.Services.AddIdentity<AppUser, IdentityRole>()
-                .AddEntityFrameworkStores<CompanyDbContext>();
+                .AddEntityFrameworkStores<CompanyDbContext>()
+                .AddDefaultTokenProviders();
 
             builder.Services.ConfigureApplicationCookie(config =>
             {
