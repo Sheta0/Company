@@ -2,6 +2,7 @@ using Company.BLL.Interfaces;
 using Company.BLL.Repositories;
 using Company.DAL.Data.Contexts;
 using Company.DAL.Models;
+using Company.PL.Helpers;
 using Company.PL.Mapping;
 using Company.PL.Services;
 using Microsoft.AspNetCore.Identity;
@@ -50,6 +51,8 @@ namespace Company.PL
                 config.LoginPath = "/Account/SignIn";
             });
 
+            builder.Services.Configure<Helpers.MailKit>(builder.Configuration.GetSection("MailKit")); // Register DI for MailKit
+            builder.Services.AddScoped<IMailKitService, MailKitService>();
 
             var app = builder.Build();
 
