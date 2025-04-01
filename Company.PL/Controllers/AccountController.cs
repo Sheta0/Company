@@ -206,5 +206,10 @@ namespace Company.PL.Controllers
         }
 
         #endregion
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }
