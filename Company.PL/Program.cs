@@ -49,6 +49,7 @@ namespace Company.PL
             builder.Services.ConfigureApplicationCookie(config =>
             {
                 config.LoginPath = "/Account/SignIn";
+                //config.AccessDeniedPath = "/Account/AccessDenied"; // Default
             });
 
             builder.Services.Configure<Helpers.MailKit>(builder.Configuration.GetSection("MailKit")); // Register DI for MailKit

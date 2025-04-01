@@ -111,6 +111,7 @@ namespace Company.PL.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin")]
         public Task<IActionResult> Delete (int id)
         {
             //var department = _departmentRepository.Get(id);
@@ -119,6 +120,7 @@ namespace Company.PL.Controllers
             return Details(id, "Delete");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete([FromRoute] int id, DepartmentDTO model)
