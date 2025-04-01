@@ -50,6 +50,12 @@ namespace Company.PL.Controllers
             return View(employees);
         }
 
+        public async Task<IActionResult> Search(string SearchInput)
+        {
+            var employees = await _unitOfWork.EmployeeRepository.GetByNameAsync(SearchInput);
+            return PartialView("PartialViews/_EmployeeTablePartialView", employees);
+        }
+
         public IActionResult Create()
         {
             //var departments = _departmentRepository.GetAll();
