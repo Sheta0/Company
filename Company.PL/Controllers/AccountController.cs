@@ -11,11 +11,13 @@ namespace Company.PL.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IMailKitService _mailKitService;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMailKitService mailKitService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _mailKitService = mailKitService;
         }
 
         #region Sign up
@@ -140,7 +142,10 @@ namespace Company.PL.Controllers
                     };
 
                     // Send Reset Password Email
-                    var flag = EmailSettings.SendEmail(email);
+
+                    //var flag = EmailSettings.SendEmail(email);
+
+                    var flag = await _mailKitService.SendEmailAsync(email);
                     if (flag)
                     {
                         // Check your Inbox
