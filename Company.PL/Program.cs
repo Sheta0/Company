@@ -5,6 +5,7 @@ using Company.DAL.Models;
 using Company.PL.Helpers;
 using Company.PL.Mapping;
 using Company.PL.Services;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,6 +55,22 @@ namespace Company.PL
 
             builder.Services.Configure<Helpers.MailKit>(builder.Configuration.GetSection("MailKit")); // Register DI for MailKit
             builder.Services.AddScoped<IMailKitService, MailKitService>();
+
+            builder.Services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                o.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+            }).AddGoogle(o =>
+            {
+                o.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                o.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            }).AddFacebook(o =>
+            {
+                o.ClientId = builder.Configuration["Authentication:Facebook:ClientId"];
+                o.ClientSecret = builder.Configuration["Authentication:Facebook:ClientSecret"];
+            });
+
+            
 
             var app = builder.Build();
 

@@ -1,8 +1,12 @@
 ﻿using Company.DAL.Models;
 using Company.PL.DTOs;
 using Company.PL.Helpers;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Company.PL.Controllers
@@ -206,6 +210,93 @@ namespace Company.PL.Controllers
         }
 
         #endregion
+
+        public IActionResult GoogleLogin()
+        {
+            var prop = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("GoogleResponse")
+            };
+            return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            if (result?.Principal is not null)
+            {
+                var claims = result.Principal.Identities.FirstOrDefault()?.Claims;
+                var emailClaim = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+                var email = emailClaim?.Value;
+
+                if (email is not null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if (user is null)
+                    {
+                        user = new AppUser
+                        {
+                            UserName = email,
+                            Email = email,
+                            FirstName = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.GivenName)?.Value,
+                            LastName = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname)?.Value
+                        };
+                        var resultCreate = await _userManager.CreateAsync(user);
+                        if (!resultCreate.Succeeded)
+                            return RedirectToAction("SignIn");
+                    }
+
+                    // Sign in the user
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            return RedirectToAction("SignIn");
+        }
+        public IActionResult FacebookLogin()
+        {
+            var prop = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("FacebookResponse")
+            };
+            return Challenge(prop, FacebookDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> FacebookResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+            if (result?.Principal is not null)
+            {
+                var claims = result.Principal.Identities.FirstOrDefault()?.Claims;
+                var emailClaim = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+                var email = emailClaim?.Value;
+
+                if (email is not null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if (user is null)
+                    {
+                        user = new AppUser
+                        {
+                            UserName = email,
+                            Email = email,
+                            FirstName = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.GivenName)?.Value,
+                            LastName = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname)?.Value
+                        };
+                        var resultCreate = await _userManager.CreateAsync(user);
+                        if (!resultCreate.Succeeded)
+                            return RedirectToAction("SignIn");
+                    }
+
+                    // Sign in the user
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            return RedirectToAction("SignIn");
+        }
 
         public IActionResult AccessDenied()
         {
