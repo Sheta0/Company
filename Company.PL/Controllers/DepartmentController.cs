@@ -31,11 +31,23 @@ namespace Company.PL.Controllers
         }
 
         [HttpGet] // GET: Department/Index
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? SearchInput)
         {
-            var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
+            IEnumerable<Department> departments;
+            if (string.IsNullOrEmpty(SearchInput))
+                departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
+            else
+                departments = await _unitOfWork.DepartmentRepository.GetByNameAsync(SearchInput);
             return View(departments);
         }
+
+
+        public async Task<IActionResult> Search(string SearchInput)
+        {
+            var departments = await _unitOfWork.DepartmentRepository.GetByNameAsync(SearchInput);
+            return PartialView("PartialViews/_DepartmentTablePartialView", departments);
+        }
+
 
         [HttpGet] // GET: Department/Create
         public IActionResult Create()

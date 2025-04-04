@@ -59,3 +59,24 @@ else
         <h3>There are NO Roles</h3>
     </div>
 }
+
+<script>
+    $(document).ready(function() {
+        const searchBar = $('#SearchInput');
+        const tableBody = $('table tbody');
+        searchBar.on('keyup', function(e) {
+            var searchValue = searchBar.val();
+            $.ajax({
+                url: '/Role/Search',
+                type: 'GET',
+                data: { SearchInput: searchValue },
+                success: function(result) {
+                    tableBody.html(result);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>

@@ -19,7 +19,7 @@ namespace Company.PL.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
         }
-        public async Task<IActionResult> Index(string? SearchInput)
+        public IActionResult Index(string? SearchInput)
         {
             IEnumerable<RoleToReturnDTO> roles;
             if (string.IsNullOrEmpty(SearchInput))
@@ -40,6 +40,18 @@ namespace Company.PL.Controllers
             }
 
             return View(roles);
+        }
+
+        public IActionResult Search(string SearchInput)
+        {
+            var roles = _roleManager.Roles
+                .Where(r => r.Name.ToLower().Contains(SearchInput.ToLower()))
+                .Select(r => new RoleToReturnDTO
+                {
+                    Id = r.Id,
+                    Name = r.Name
+                });
+            return PartialView("PartialViews/_RoleTablePartialView", roles);
         }
 
         public IActionResult Create()
