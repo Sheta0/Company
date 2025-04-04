@@ -16,12 +16,20 @@ namespace Company.PL.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IMailKitService _mailKitService;
+        private readonly ITwilioService _twilioService;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMailKitService mailKitService)
+        public AccountController
+            (
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            IMailKitService mailKitService,
+            ITwilioService twilioService
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mailKitService = mailKitService;
+            _twilioService = twilioService;
         }
 
         #region Sign up
@@ -124,7 +132,7 @@ namespace Company.PL.Controllers
             return View();
         }
 
-        public async Task<IActionResult> SendResetPasswordUrl(ForgotPasswordDTO model)
+        public async Task<IActionResult> SendResetPasswordEmail(ForgotPasswordDTO model)
         {
             if (ModelState.IsValid)
             {
@@ -161,8 +169,43 @@ namespace Company.PL.Controllers
             }
             return View("ForgotPassword", model);
         }
+        public async Task<IActionResult> SendResetPasswordSMS(ForgotPasswordDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+                    // Generate Reset Password Token
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    // Create URL
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+                    // Create SMS
+                    var sms = new SMS
+                    {
+                        To = user.PhoneNumber,
+                        Body = url
+                    };
+
+                    // Send Reset Password SMS
+                    await _twilioService.SendSMSAsync(sms);
+
+                    // Check your Inbox
+                    return RedirectToAction("CheckYourPhone");
+                }
+                ModelState.AddModelError("", "Invalid Phone!");
+
+            }
+            return View("ForgotPassword", model);
+        }
 
         public IActionResult CheckYourInbox()
+        {
+            return View();
+        }
+        public IActionResult CheckYourPhone()
         {
             return View();
         }

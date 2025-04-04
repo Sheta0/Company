@@ -53,8 +53,10 @@ namespace Company.PL
                 //config.AccessDeniedPath = "/Account/AccessDenied"; // Default
             });
 
-            builder.Services.Configure<Helpers.MailKit>(builder.Configuration.GetSection("MailKit")); // Register DI for MailKit
+            builder.Services.Configure<Helpers.MailKit>(builder.Configuration.GetSection("MailKit"));
             builder.Services.AddScoped<IMailKitService, MailKitService>();
+            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("TwilioSettings"));
+            builder.Services.AddScoped<ITwilioService, TwilioService>();
 
             builder.Services.AddAuthentication(o =>
             {
