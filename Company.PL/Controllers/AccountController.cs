@@ -176,37 +176,25 @@ namespace Company.PL.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user is not null)
                 {
-                    try
+                    // Generate Reset Password Token
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    // Create URL
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+                    // Create SMS
+                    var sms = new SMS
                     {
-                        // Generate Reset Password Token
-                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                        To = user.PhoneNumber,
+                        Body = $"Reset your password using this link: {url}"
+                    };
 
-                        // Create URL
-                        var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+                    // Send Reset Password SMS
+                    await _twilioService.SendSMSAsync(sms);
 
-                        // Create SMS
-                        var sms = new SMS
-                        {
-                            To = user.PhoneNumber,
-                            Body = $"Reset your password using this link: {url}"
-                        };
+                    // Check your Phone
+                    return RedirectToAction("CheckYourPhone");
 
-                        // Send Reset Password SMS
-                        await _twilioService.SendSMSAsync(sms);
-
-                        // Check your Inbox
-                        return RedirectToAction("CheckYourPhone");
-                    }
-                    catch (Twilio.Exceptions.ApiException ex)
-                    {
-                        // Log the exception details
-                        ModelState.AddModelError("", $"Twilio API Error: {ex.Message}");
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log the exception details
-                        ModelState.AddModelError("", $"An error occurred: {ex.Message}");
-                    }
                 }
                 else
                 {
