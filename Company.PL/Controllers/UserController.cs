@@ -17,7 +17,7 @@ namespace Company.PL.Controllers
         {
             _userManager = userManager;
         }
-        public async Task<IActionResult> Index(string? SearchInput)
+        public IActionResult Index(string? SearchInput)
         {
             IEnumerable<UserToReturnDTO> users;
             if (string.IsNullOrEmpty(SearchInput))
@@ -47,6 +47,24 @@ namespace Company.PL.Controllers
 
             return View(users);
         }
+
+        public IActionResult Search(string SearchInput)
+        {
+            var users = _userManager.Users
+                .Where(u => u.FirstName.ToLower().Contains(SearchInput.ToLower()) || u.LastName.ToLower().Contains(SearchInput.ToLower()))
+                .Select(u => new UserToReturnDTO
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    Roles = _userManager.GetRolesAsync(u).Result
+                });
+
+            return PartialView("PartialViews/_UserTablePartialView", users);
+        }
+
 
         public async Task<IActionResult> Details(string? id, string viewName = "Details")
         {

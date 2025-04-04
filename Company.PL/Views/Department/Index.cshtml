@@ -6,6 +6,19 @@
 
 <h1 class="text-center my-4">All Departments</h1>
 
+<div class="row justify-content-center align-items-center mb-3">
+    <form asp-action="Index" method="get" class="row col-8 offset-1">
+        <div class="col-8">
+            <input type="text" class="form-control" id="SearchInput" name="SearchInput" placeholder="Search By Name..." />
+        </div>
+        <div class="col-4">
+            <input type="submit" value="Search" class="btn btn-success" />
+        </div>
+    </form>
+</div>
+
+
+
 @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
     <div class="alert alert-info">
@@ -49,3 +62,24 @@ else
         <h3>There are NO Departments</h3>
     </div>
 }
+
+<script>
+    $(document).ready(function() {
+        const searchBar = $('#SearchInput');
+        const tableBody = $('table tbody');
+        searchBar.on('keyup', function(e) {
+            var searchValue = searchBar.val();
+            $.ajax({
+                url: '/Department/Search',
+                type: 'GET',
+                data: { SearchInput: searchValue },
+                success: function(result) {
+                    tableBody.html(result);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>

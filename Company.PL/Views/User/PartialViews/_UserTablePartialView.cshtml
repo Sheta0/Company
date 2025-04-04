@@ -1,0 +1,20 @@
+﻿@model IEnumerable<UserToReturnDTO>
+
+@foreach (var user in Model)
+{
+    <tr>
+        <td>@user.Id</td>
+        <td>@user.UserName</td>
+        <td>@user.FirstName</td>
+        <td>@user.LastName</td>
+        <td>@Html.DisplayFor(M => user.Email)</td>
+        <td>
+            @foreach (var role in user.Roles)
+            {
+                <span>@role,</span>
+            }
+        </td>
+
+        <partial name="_ButtonsPartialView" model="@user.Id" />
+    </tr>
+} 
