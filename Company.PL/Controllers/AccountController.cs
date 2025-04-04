@@ -1,8 +1,12 @@
 ﻿using Company.DAL.Models;
 using Company.PL.DTOs;
 using Company.PL.Helpers;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Company.PL.Controllers
@@ -12,12 +16,20 @@ namespace Company.PL.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IMailKitService _mailKitService;
+        private readonly ITwilioService _twilioService;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMailKitService mailKitService)
+        public AccountController
+            (
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            IMailKitService mailKitService,
+            ITwilioService twilioService
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mailKitService = mailKitService;
+            _twilioService = twilioService;
         }
 
         #region Sign up
@@ -120,7 +132,7 @@ namespace Company.PL.Controllers
             return View();
         }
 
-        public async Task<IActionResult> SendResetPasswordUrl(ForgotPasswordDTO model)
+        public async Task<IActionResult> SendResetPasswordEmail(ForgotPasswordDTO model)
         {
             if (ModelState.IsValid)
             {
@@ -157,8 +169,43 @@ namespace Company.PL.Controllers
             }
             return View("ForgotPassword", model);
         }
+        public async Task<IActionResult> SendResetPasswordSMS(ForgotPasswordDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+                    // Generate Reset Password Token
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    // Create URL
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+                    // Create SMS
+                    var sms = new SMS
+                    {
+                        To = user.PhoneNumber,
+                        Body = url
+                    };
+
+                    // Send Reset Password SMS
+                    await _twilioService.SendSMSAsync(sms);
+
+                    // Check your Inbox
+                    return RedirectToAction("CheckYourPhone");
+                }
+                ModelState.AddModelError("", "Invalid Phone!");
+
+            }
+            return View("ForgotPassword", model);
+        }
 
         public IActionResult CheckYourInbox()
+        {
+            return View();
+        }
+        public IActionResult CheckYourPhone()
         {
             return View();
         }
@@ -206,6 +253,93 @@ namespace Company.PL.Controllers
         }
 
         #endregion
+
+        public IActionResult GoogleLogin()
+        {
+            var prop = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("GoogleResponse")
+            };
+            return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            if (result?.Principal is not null)
+            {
+                var claims = result.Principal.Identities.FirstOrDefault()?.Claims;
+                var emailClaim = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+                var email = emailClaim?.Value;
+
+                if (email is not null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if (user is null)
+                    {
+                        user = new AppUser
+                        {
+                            UserName = email,
+                            Email = email,
+                            FirstName = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.GivenName)?.Value,
+                            LastName = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname)?.Value
+                        };
+                        var resultCreate = await _userManager.CreateAsync(user);
+                        if (!resultCreate.Succeeded)
+                            return RedirectToAction("SignIn");
+                    }
+
+                    // Sign in the user
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            return RedirectToAction("SignIn");
+        }
+        public IActionResult FacebookLogin()
+        {
+            var prop = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("FacebookResponse")
+            };
+            return Challenge(prop, FacebookDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> FacebookResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+            if (result?.Principal is not null)
+            {
+                var claims = result.Principal.Identities.FirstOrDefault()?.Claims;
+                var emailClaim = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+                var email = emailClaim?.Value;
+
+                if (email is not null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if (user is null)
+                    {
+                        user = new AppUser
+                        {
+                            UserName = email,
+                            Email = email,
+                            FirstName = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.GivenName)?.Value,
+                            LastName = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname)?.Value
+                        };
+                        var resultCreate = await _userManager.CreateAsync(user);
+                        if (!resultCreate.Succeeded)
+                            return RedirectToAction("SignIn");
+                    }
+
+                    // Sign in the user
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            return RedirectToAction("SignIn");
+        }
 
         public IActionResult AccessDenied()
         {
