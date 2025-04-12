@@ -1,24 +1,45 @@
 ﻿@model EmployeeDTO
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Employee";
 }
 
-<h1 class="text-center my-4">Edit Employee</h1>
-
-<div class="container">
-    <form asp-action="Edit" enctype="multipart/form-data">
-        <div asp-validation-summary="All"></div>
-        <partial name="PartialViews/_CreateEditEmployeePartialView" />
-        <input hidden asp-for="ImageName" />
-
-        <div class="d-flex justify-content-start gap-3 my-4">
-            <input type="submit" value="Submit" class="btn btn-primary" />
-            <a asp-action="Index" class="btn btn-light">Back to List</a>
-        </div>
-    </form>
+<div class="nova-page-header">
+    <h1 class="nova-page-title">Edit Employee</h1>
+    <div class="nova-page-actions">
+        <a asp-action="Index" class="nova-btn nova-btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
 </div>
 
-@section ValidationScriptSection {
+<div class="nova-card">
+    <div class="nova-card-body">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="nova-alert nova-alert-danger"></div>
+            
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ImageName" />
+            
+            <partial name="PartialViews/_CreateEditEmployeePartialView" />
+            
+            <div class="nova-form-group">
+                <label class="nova-label">Current Image</label>
+                <div>
+                    <img src="~/files/images/@Model.ImageName" style="max-width: 200px; max-height: 200px;" class="nova-rounded" />
+                </div>
+            </div>
+            
+            <div class="nova-flex nova-gap-2 nova-mt-4">
+                <button type="submit" class="nova-btn nova-btn-primary">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a asp-action="Index" class="nova-btn nova-btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

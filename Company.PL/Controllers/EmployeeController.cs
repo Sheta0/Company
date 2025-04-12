@@ -47,13 +47,16 @@ namespace Company.PL.Controllers
 
             // 3.TempData 
 
-            return View(employees);
+            var employeeDTOs = _mapper.Map<IEnumerable<EmployeeDTO>>(employees);
+
+            return View(employeeDTOs);
         }
 
         public async Task<IActionResult> Search(string SearchInput)
         {
             var employees = await _unitOfWork.EmployeeRepository.GetByNameAsync(SearchInput);
-            return PartialView("PartialViews/_EmployeeTablePartialView", employees);
+            var employeeDTOs = _mapper.Map<IEnumerable<EmployeeDTO>>(employees);
+            return PartialView("PartialViews/_EmployeeTablePartialView", employeeDTOs);
         }
 
         public IActionResult Create()
@@ -147,22 +150,26 @@ namespace Company.PL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete([FromRoute] int id, EmployeeDTO model)
         {
-            if (id != model.Id)
-                return BadRequest("Invalid Id");
-
-            var employee = _mapper.Map<Employee>(model);
-            _unitOfWork.EmployeeRepository.Delete(employee);
-            var count = await _unitOfWork.CompleteAsync();
-
-            if (count > 0)
+            if(ModelState.IsValid)
             {
-                if (model.ImageName is not null)
-                    FileSettings.DeleteFile(model.ImageName, "images");
+                if (id != model.Id)
+                    return BadRequest("Invalid Id");
 
-                TempData["Message"] = "User Deleted Successfully!";
+                var employee = _mapper.Map<Employee>(model);
+                _unitOfWork.EmployeeRepository.Delete(employee);
+                var count = await _unitOfWork.CompleteAsync();
 
-                return RedirectToAction("Index");
+                if (count > 0)
+                {
+                    if (model.ImageName is not null)
+                        FileSettings.DeleteFile(model.ImageName, "images");
+
+                    TempData["Message"] = "User Deleted Successfully!";
+
+                    return RedirectToAction("Index");
+                }
             }
+            
             return View(model);
         }
     }

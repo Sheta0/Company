@@ -1,25 +1,32 @@
 ﻿@model UserToReturnDTO
 
-<div class="container mb-4">
-
-    <div class="form-group">
-        <label class="col-form-label" asp-for="UserName"></label>
-        <input asp-for="UserName" class="form-control" readonly />
-    </div>
-
-    <div class="form-group">
-        <label class="col-form-label" asp-for="FirstName"></label>
-        <input asp-for="FirstName" class="form-control" readonly />
-    </div>
-
-    <div class="form-group">
-        <label class="col-form-label" asp-for="LastName"></label>
-        <input asp-for="LastName" class="form-control" readonly />
-    </div>
-
-    <div class="form-group">
-        <label class="col-form-label" asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" readonly />
-    </div>
-
+<div class="nova-form-group">
+    <label asp-for="Id" class="nova-label">ID</label>
+    <input asp-for="Id" class="nova-input" readonly />
 </div>
+
+<div class="nova-form-group">
+    <label asp-for="UserName" class="nova-label">Username</label>
+    <input asp-for="UserName" class="nova-input" readonly />
+</div>
+
+<div class="nova-form-group">
+    <label asp-for="FirstName" class="nova-label">First Name</label>
+    <input asp-for="FirstName" class="nova-input" readonly />
+</div>
+
+<div class="nova-form-group">
+    <label asp-for="LastName" class="nova-label">Last Name</label>
+    <input asp-for="LastName" class="nova-input" readonly />
+</div>
+
+<div class="nova-form-group">
+    <label asp-for="Email" class="nova-label">Email</label>
+    <input asp-for="Email" class="nova-input" readonly />
+</div>
+
+<div class="nova-form-group">
+    <label class="nova-label">Roles</label>
+    <input value="@(Model.Roles is null || !Model.Roles.Any() ? "No Roles" : string.Join(", ", Model.Roles))" class="nova-input" readonly />
+</div>
+

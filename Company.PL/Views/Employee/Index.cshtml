@@ -1,110 +1,106 @@
-﻿@model IEnumerable<Employee>
+﻿@model IEnumerable<EmployeeDTO>
 
 @{
     ViewData["Title"] = "All Employees";
-    // ViewData["Message"];
-
-    string? ViewDataMessage = ViewData["Message"] as string; // Enforce Type Safety => Requires Casting [Strong Type]
-    string? ViewBagMessage = ViewBag.Message; // Can't Enforce Type Safety (Dynamic) => doesn't require casting [Weak Type]
+    string? ViewDataMessage = ViewData["Message"] as string;
+    string? ViewBagMessage = ViewBag.Message;
 }
 
-
-<h1 class="text-center my-4">All Employees</h1>
-
-<div class="row justify-content-center align-items-center mb-3">
-    <form asp-action="Index" class="row col-8 offset-1">
-        <div class="col-8">
-            <input type="text" class="form-control" id="SearchInput" name="SearchInput" placeholder="Search By Name..." />
-        </div>
-        <div class="col-4">
-            <input type="submit" value="Search" class="btn btn-success" />
-        </div>
-    </form>
+<div class="nova-page-header">
+    <h1 class="nova-page-title">All Employees</h1>
+    <div class="nova-page-actions">
+        <a asp-action="Create" class="nova-btn nova-btn-primary">
+            <i class="fas fa-plus"></i> Create New Employee
+        </a>
+    </div>
 </div>
-
-
-@* <div class="alert alert-danger">
-    @ViewData["Message"]
-</div>
- *@
-
-@* <div class="alert alert-danger">
-    @ViewBag.Message
-</div> *@
 
 @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
-    <div class="alert alert-info">
+    <div class="nova-alert nova-alert-info">
         @TempData["Message"]
     </div>
 }
 
-
-<div class="text-end mb-3">
-    <a class="btn btn-primary" asp-action="Create">Create New Employee</a>
-</div>
-
-
-
-@if (Model.Count() > 0)
-{
-    <table class="table table-striped table-bordered table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>@Html.DisplayNameFor(E => E.ImageName)</th>
-                <th>@Html.DisplayNameFor(E => E.Name)</th>
-                <th>@Html.DisplayNameFor(E => E.Age)</th>
-                <th>@Html.DisplayNameFor(E => E.Email)</th>
-                <th>@Html.DisplayNameFor(E => E.Address)</th>
-                <th>@Html.DisplayNameFor(E => E.Phone)</th>
-                <th>@Html.DisplayNameFor(E => E.Salary)</th>
-                <th>@Html.DisplayNameFor(E => E.IsActive)</th>
-                <th>@Html.DisplayNameFor(E => E.IsDeleted)</th>
-                <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
-                <th>@Html.DisplayNameFor(E => E.CreateAt)</th>
-                <th>@Html.DisplayNameFor(E => E.DepartmentId)</th>
-                <th>Details</th>
-                <th>Update</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var employee in Model)
-            {
-                <tr>
-                    <td>
-                        <img src="~/files/images/@employee.ImageName" class="img-fluid w-100 h-100" />
-                    </td>
-                    <td>@employee.Name</td>
-                    <td>@employee.Age</td>
-                    <td>@employee.Email</td>
-                    <td>@employee.Address</td>
-                    <td>@employee.Phone</td>
-                    <td>@Html.DisplayFor(M => employee.Salary)</td>
-                    <td>@employee.IsActive</td>
-                    <td>@employee.IsDeleted</td>
-                    <td>@employee.HiringDate</td>
-                    <td>@employee.CreateAt</td>
-                    @if (employee.Department is not null)
-                    {
-                        <td>@employee.Department.Name</td>
-                    }
-                    else
-                    {
-                        <td>No Department</td>
-                    }
-                    <partial name="_ButtonsPartialView" model="@employee.Id.ToString()" />
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <div class="mt-4 alert alert-warning">
-        <h3>There are NO Employees</h3>
+<div class="nova-card nova-mb-6">
+    <div class="nova-card-body">
+        <form asp-action="Index" method="get" class="nova-flex nova-mb-4 nova-gap-2">
+            <input type="text" class="nova-input" id="SearchInput" name="SearchInput" placeholder="Search by name..." style="max-width: 300px;">
+            <button type="submit" class="nova-btn nova-btn-primary">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </form>
+        
+        @if (Model.Count() > 0)
+        {
+            <div class="nova-table-responsive">
+                <table class="nova-table nova-table-striped">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(E => E.ImageName)</th>
+                            <th>@Html.DisplayNameFor(E => E.EmpName)</th>
+                            <th>@Html.DisplayNameFor(E => E.Age)</th>
+                            <th>@Html.DisplayNameFor(E => E.Email)</th>
+                            <th>@Html.DisplayNameFor(E => E.Address)</th>
+                            <th>@Html.DisplayNameFor(E => E.Phone)</th>
+                            <th>@Html.DisplayNameFor(E => E.Salary)</th>
+                            <th>@Html.DisplayNameFor(E => E.IsActive)</th>
+                            <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
+                            <th>Department</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var employee in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="~/files/images/@employee.ImageName" class="nova-rounded" style="width: 50px; height: 50px; object-fit: cover;" />
+                                </td>
+                                <td>@employee.EmpName</td>
+                                <td>@employee.Age</td>
+                                <td>@employee.Email</td>
+                                <td>@employee.Address</td>
+                                <td>@employee.Phone</td>
+                                <td>@Html.DisplayFor(M => employee.Salary)</td>
+                                <td>
+                                    @if (employee.IsActive)
+                                    {
+                                        <span class="nova-badge nova-badge-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="nova-badge nova-badge-danger">Inactive</span>
+                                    }
+                                </td>
+                                <td>@employee.HiringDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @if (employee.DepartmentName is not null)
+                                    {
+                                        @employee.DepartmentName
+                                    }
+                                    else
+                                    {
+                                        <span class="nova-text-muted">No Department</span>
+                                    }
+                                </td>
+                                <td>
+                                    <partial name="_SmallerButtonsPartialView" model="@employee.Id.ToString()" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="nova-alert nova-alert-warning">
+                <h3 class="nova-mb-0">There are no Employees</h3>
+            </div>
+        }
     </div>
-}
+</div>
 
 <script>
     $(document).ready(function() {

@@ -1,33 +1,45 @@
 ﻿@model RoleToReturnDTO
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Role";
 }
 
-<h1 class="text-center my-4">Edit Role</h1>
+<div class="nova-page-header">
+    <h1 class="nova-page-title">Edit Role</h1>
+    <div class="nova-page-actions">
+        <a asp-action="AddOrRemoveUsers" asp-route-roleId="@Model.Id" class="nova-btn nova-btn-secondary">
+            <i class="fas fa-users-cog"></i> Manage Users
+        </a>
+        <a asp-action="Index" class="nova-btn nova-btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
 
 @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
-<div class="alert alert-info">
-    @TempData["Message"]
-</div>
+    <div class="nova-alert nova-alert-info">
+        @TempData["Message"]
+    </div>
 }
 
+<div class="nova-card">
+    <div class="nova-card-body">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="nova-alert nova-alert-danger"></div>
 
-<div class="container">
-    <form asp-action="Edit" enctype="multipart/form-data">
-        <div asp-validation-summary="All"></div>
-        <partial name="PartialViews/_CreateEditRolePartialView" />
+            <partial name="PartialViews/_CreateEditRolePartialView" />
 
-        <a asp-action="AddOrRemoveUsers" asp-route-roleId = "@Model.Id" class="btn btn-outline-info mt-4">Add or Remove Users</a>
-
-        <div class="d-flex justify-content-start gap-3 my-4">
-            <input type="submit" value="Submit" class="btn btn-primary" />
-            <a asp-action="Index" class="btn btn-light">Back to List</a>
-        </div>
-    </form>
+            <div class="nova-flex nova-gap-2 nova-mt-4">
+                <button type="submit" class="nova-btn nova-btn-primary">
+                    <i class="fas fa-save"></i> Update
+                </button>
+                <a asp-action="Index" class="nova-btn nova-btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 
-@section ValidationScriptSection {
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

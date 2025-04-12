@@ -4,72 +4,78 @@
     ViewData["Title"] = "All Users";
 }
 
-
-<h1 class="text-center my-4">All Users</h1>
-
-<div class="row justify-content-center align-items-center mb-3">
-    <form asp-action="Index" class="row col-8 offset-1">
-        <div class="col-8">
-            <input type="text" class="form-control" id="SearchInput" name="SearchInput" placeholder="Search By Name..." />
-        </div>
-        <div class="col-4">
-            <input type="submit" value="Search" class="btn btn-success" />
-        </div>
-    </form>
+<div class="nova-page-header">
+    <h1 class="nova-page-title">All Users</h1>
 </div>
 
 @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
-    <div class="alert alert-info">
+    <div class="nova-alert nova-alert-info">
         @TempData["Message"]
     </div>
 }
 
+<div class="nova-card nova-mb-6">
+    <div class="nova-card-body">
+        <form asp-action="Index" method="get" class="nova-flex nova-mb-4 nova-gap-2">
+            <input type="text" class="nova-input" id="SearchInput" name="SearchInput" placeholder="Search by name..." style="max-width: 300px;">
+            <button type="submit" class="nova-btn nova-btn-primary">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </form>
 
-@if (Model.Count() > 0)
-{
-    <table class="table table-striped table-bordered table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>@Html.DisplayNameFor(E => E.Id)</th>
-                <th>@Html.DisplayNameFor(E => E.UserName)</th>
-                <th>@Html.DisplayNameFor(E => E.FirstName)</th>
-                <th>@Html.DisplayNameFor(E => E.LastName)</th>
-                <th>@Html.DisplayNameFor(E => E.Email)</th>
-                <th>@Html.DisplayNameFor(E => E.Roles)</th>
-                <th>Details</th>
-                <th>Update</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model)
-            {
-                <tr>
-                    <td>@user.Id</td>
-                    <td>@user.UserName</td>
-                    <td>@user.FirstName</td>
-                    <td>@user.LastName</td>
-                    <td>@Html.DisplayFor(M => user.Email)</td>
-                    <td>
-                        @foreach (var role in user.Roles)
+        @if (Model.Count() > 0)
+        {
+            <div class="nova-table-responsive">
+                <table class="nova-table nova-table-striped">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(E => E.Id)</th>
+                            <th>@Html.DisplayNameFor(E => E.UserName)</th>
+                            <th>@Html.DisplayNameFor(E => E.FirstName)</th>
+                            <th>@Html.DisplayNameFor(E => E.LastName)</th>
+                            <th>@Html.DisplayNameFor(E => E.Email)</th>
+                            <th>@Html.DisplayNameFor(E => E.Roles)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
                         {
-                            <span>@role,</span>
+                            <tr>
+                                <td>@user.Id</td>
+                                <td>@user.UserName</td>
+                                <td>@user.FirstName</td>
+                                <td>@user.LastName</td>
+                                <td>@Html.DisplayFor(M => user.Email)</td>
+                                <td>
+                                    @if (user.Roles is null || !user.Roles.Any())
+                                    {
+                                        <span>No Roles</span>
+                                    }
+                                    else
+                                    {
+                                        @string.Join(", ", user.Roles)
+                                    }
+                                    
+                                </td>
+                                <td>
+                                    <partial name="_ButtonsPartialView" model="@user.Id" />
+                                </td>
+                            </tr>
                         }
-                    </td>
-
-                    <partial name="_ButtonsPartialView" model="@user.Id" />
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <div class="mt-4 alert alert-warning">
-        <h3>There are NO Users</h3>
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="nova-alert nova-alert-warning">
+                <h3 class="nova-mb-0">There are no users</h3>
+            </div>
+        }
     </div>
-}
+</div>
 
 <script>
     $(document).ready(function() {

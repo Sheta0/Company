@@ -1,35 +1,128 @@
 ﻿@model SignUpDTO
 
 @{
-	ViewData["Title"] = "Register";
-	Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<div class="main-agileinfo">
-	<div class="agileits-top">
-		<form asp-action="SignUp">
-			<div asp-validation-summary="All"></div>
-			<input class="text" asp-for="FirstName" placeholder="First Name" required>
-			<input class="text" asp-for="LastName" placeholder="Last Name" required>
-			<input class="text" asp-for="UserName" placeholder="UserName" required>
-			<input class="text" asp-for="Email" placeholder="Email" required>
-			<input class="text" asp-for="Password" placeholder="Password" required>
-			<input class="text w3lpass" asp-for="ConfirmPassword" placeholder="Confirm Password" required>
-			<div class="wthree-text">
-				<label class="anim">
-					<input asp-for="IsAgree" class="checkbox" required>
-					<span>I Agree To The Terms & Conditions</span>
-				</label>
-				<div class="clear"> </div>
-			</div>
-			<input type="submit" value="SIGNUP">
-		</form>
-		<p>Already have an Account? <a asp-action="SignIn"> Login Now!</a></p>
-	</div>
-</div>
+<form asp-action="SignUp" method="post" class="needs-validation">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+    }
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="FirstName" class="form-label">First Name</label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <input asp-for="FirstName" class="form-control" placeholder="FName" required>
+                </div>
+                <span asp-validation-for="FirstName" class="field-validation-error"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="LastName" class="form-label">Last Name</label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <input asp-for="LastName" class="form-control" placeholder="LName" required>
+                </div>
+                <span asp-validation-for="LastName" class="field-validation-error"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="UserName" class="form-label">Username</label>
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="fas fa-user-tag"></i>
+            </span>
+            <input asp-for="UserName" class="form-control" placeholder="Enter a username" required>
+        </div>
+        <span asp-validation-for="UserName" class="field-validation-error"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Email" class="form-label">Email Address</label>
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="fas fa-envelope"></i>
+            </span>
+            <input asp-for="Email" class="form-control" placeholder="Enter your email" required>
+        </div>
+        <span asp-validation-for="Email" class="field-validation-error"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Password" class="form-label">Password</label>
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="fas fa-lock"></i>
+            </span>
+            <input asp-for="Password" class="form-control" placeholder="Create a password" required>
+        </div>
+        <span asp-validation-for="Password" class="field-validation-error"></span>
+    </div>
+
+    <div class="form-group mb-4">
+        <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="fas fa-lock"></i>
+            </span>
+            <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm your password" required>
+        </div>
+        <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
+    </div>
+
+    <div class="form-group mb-4">
+        <div class="form-check">
+            <input asp-for="IsAgree" class="form-check-input" id="terms-agree" required>
+            <label class="form-check-label" for="terms-agree">
+                I agree to the <a href="#" class="link-primary">Terms & Conditions</a>
+            </label>
+        </div>
+        <span asp-validation-for="IsAgree" class="field-validation-error"></span>
+    </div>
+
+    <div class="form-group mb-4">
+        <button type="submit" class="btn btn-primary w-100">
+            <i class="fas fa-user-plus me-2"></i> Create Account
+        </button>
+    </div>
+
+    <div class="social-login">
+        <span class="social-login-text">Or sign up with</span>
+        <div class="d-grid gap-2 mt-3">
+            <a asp-action="GoogleLogin" class="btn btn-outline-danger">
+                <i class="fab fa-google me-2"></i> Sign up with Google
+            </a>
+            <a asp-action="FacebookLogin" class="btn btn-outline-primary">
+                <i class="fab fa-facebook-f me-2"></i> Sign up with Facebook
+            </a>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <p class="mb-0">Already have an account? <a asp-action="SignIn" class="link-primary fw-bold">Sign In</a></p>
+    </div>
+</form>
 
 @section ValidationScriptSection {
-	<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            $('#FirstName').focus();
+
+            $('.form-control').on('focus blur', function (e) {
+                $(this).parents('.form-group').toggleClass('focused', (e.type === 'focus'));
+            }).trigger('blur');
+        });
+    </script>
 }
-
-

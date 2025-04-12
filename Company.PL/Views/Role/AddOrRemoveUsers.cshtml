@@ -1,27 +1,42 @@
 ﻿@model List<UsersInRoleDTO>
 
 @{
-    ViewData["Title"] = "AddOrRemoveUsers";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-
+    ViewData["Title"] = "Manage Role Users";
     var roleId = ViewData["RoleId"] as string;
 }
 
-<h1>Add or Remove Users</h1>
+<div class="nova-page-header">
+    <h1 class="nova-page-title">Manage Role Users</h1>
+    <div class="nova-page-actions">
+        <a asp-action="Edit" asp-route-id="@roleId" class="nova-btn nova-btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to Role
+        </a>
+    </div>
+</div>
 
-<form asp-action="AddOrRemoveUsers" asp-route-roleId="@roleId">
-
-    @for (int i = 0; i < Model.Count; i++)
-    {
-        <div class="form-group">
-            <input asp-for="@Model[i].IsSelected" />
-            <label asp-for="@Model[i].IsSelected"> @Model[i].UserName</label>
-        </div>
-
-        <input hidden asp-for="@Model[i].UserId" />
-        <input hidden asp-for="@Model[i].UserName" />
-    }
-    <input type="submit" value="Update" class="btn btn-primary" />
-    <a asp-action="Edit" asp-route-id="@roleId" class="btn btn-light">Cancel</a>
-
-</form>
+<div class="nova-card">
+    <div class="nova-card-body">
+        <form asp-action="AddOrRemoveUsers" asp-route-roleId="@roleId" method="post">
+            <div class="nova-grid" style="grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <div class="nova-form-group">
+                        <div class="nova-form-check">
+                            <input asp-for="@Model[i].IsSelected" class="nova-form-check-input" />
+                            <label asp-for="@Model[i].IsSelected" class="nova-form-check-label">@Model[i].UserName</label>
+                        </div>
+                        <input type="hidden" asp-for="@Model[i].UserId" />
+                        <input type="hidden" asp-for="@Model[i].UserName" />
+                    </div>
+                }
+            </div>
+            
+            <div class="nova-flex nova-gap-2 nova-mt-4">
+                <button type="submit" class="nova-btn nova-btn-primary">
+                    <i class="fas fa-save"></i> Update Users
+                </button>
+                <a asp-action="Edit" asp-route-id="@roleId" class="nova-btn nova-btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

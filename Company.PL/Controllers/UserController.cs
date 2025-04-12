@@ -29,7 +29,7 @@ namespace Company.PL.Controllers
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     Email = u.Email,
-                    Roles = _userManager.GetRolesAsync(u).Result
+                    Roles = _userManager.GetRolesAsync(u).Result ?? new List<string>()
                 });
             }
             else
@@ -41,7 +41,7 @@ namespace Company.PL.Controllers
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     Email = u.Email,
-                    Roles = _userManager.GetRolesAsync(u).Result
+                    Roles = _userManager.GetRolesAsync(u).Result ?? new List<string>()
                 }).Where(u => u.FirstName.ToLower().Contains(SearchInput.ToLower()));
             }
 
@@ -59,7 +59,7 @@ namespace Company.PL.Controllers
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     Email = u.Email,
-                    Roles = _userManager.GetRolesAsync(u).Result
+                    Roles = _userManager.GetRolesAsync(u).Result ?? new List<string>()
                 });
 
             return PartialView("PartialViews/_UserTablePartialView", users);
@@ -83,8 +83,9 @@ namespace Company.PL.Controllers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Roles = _userManager.GetRolesAsync(user).Result
+                Roles = _userManager.GetRolesAsync(user).Result ?? new List<string>()
             };
+
 
             return View(viewName, userToReturn);
         }
@@ -131,15 +132,14 @@ namespace Company.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(string id, UserToReturnDTO model)
+        public async Task<IActionResult> Delete([FromRoute]string id,UserToReturnDTO model)
         {
             if (ModelState.IsValid)
             {
                 if (id != model.Id)
-                    return BadRequest("Invalid Operation");
+                    return BadRequest();
 
                 var user = await _userManager.FindByIdAsync(id);
-
                 if (user == null)
                     return NotFound(new { statusCode = 404, message = $"User with id {id} was not found" });
 
@@ -149,9 +149,11 @@ namespace Company.PL.Controllers
                     TempData["Message"] = "User Deleted Successfully!";
                     return RedirectToAction("Index");
                 }
-                ModelState.AddModelError("", "Invalid Operation");
+
             }
+
             return View(model);
         }
+
     }
 }

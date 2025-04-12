@@ -1,14 +1,35 @@
 ﻿@model EmployeeDTO
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Employee Details";
 }
 
-<h1 class="text-center my-4">Employee Details</h1>
+<div class="nova-page-header">
+    <h1 class="nova-page-title">Employee Details</h1>
+    <div class="nova-page-actions">
+        <a asp-action="Index" class="nova-btn nova-btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
 
-<partial name="PartialViews/_DetailsDeleteEmployeePartialView" />
+<div class="nova-card">
+    <div class="nova-card-body">
+        <div class="nova-grid" style="grid-template-columns: 250px 1fr; gap: 2rem;">
+            <div>
+                <img src="~/files/images/@Model.ImageName" class="nova-rounded" style="width: 100%; max-width: 250px; object-fit: cover;" />
+            </div>
 
-<div class="d-flex justify-content-start gap-3">
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">Edit</a>
-    <a asp-action="Index" class="btn btn-light">Back to List</a>
+            <div>
+                <partial name="PartialViews/_DetailsDeleteEmployeePartialView" />
+
+                <div class="nova-flex nova-gap-2 nova-mt-4">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="nova-btn nova-btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a asp-action="Index" class="nova-btn nova-btn-outline">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

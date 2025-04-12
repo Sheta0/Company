@@ -25,6 +25,7 @@ namespace Company.PL.DTOs
 
         [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
+        
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
 

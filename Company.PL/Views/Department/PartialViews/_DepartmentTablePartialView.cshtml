@@ -5,7 +5,9 @@
     <tr>
         <td>@department.Code</td>
         <td>@department.Name</td>
-        <td>@department.CreateAt</td>
-        <partial name="_ButtonsPartialView" model="department.Id.ToString()" />
+        <td>@department.CreateAt.ToString("yyyy-MM-dd")</td>
+        <td>
+            <partial name="_ButtonsPartialView" model="@department.Id.ToString()" />
+        </td>
     </tr>
 }

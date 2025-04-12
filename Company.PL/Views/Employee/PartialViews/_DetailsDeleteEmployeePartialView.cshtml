@@ -1,66 +1,67 @@
 ﻿@model EmployeeDTO
 
-<div class="container mb-4">
-
-    <div class="row justify-content-center align-items-center m-3">
-        <img src="~/files/images/@Model.ImageName" class="w-25 h-25 card-img" />
+<div class="nova-grid" style="grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+    <div class="nova-form-group">
+        <label asp-for="EmpName" class="nova-label">Name</label>
+        <input asp-for="EmpName" class="nova-input" readonly />
     </div>
 
-    <div class="form-group">
-        <label class="col-form-label" asp-for="EmpName"></label>
-        <input asp-for="EmpName" class="form-control" readonly />
+    <div class="nova-form-group">
+        <label asp-for="Age" class="nova-label">Age</label>
+        <input asp-for="Age" class="nova-input" readonly />
     </div>
 
-    <div class="form-group">
-        <label class="col-form-label" asp-for="Age"></label>
-        <input asp-for="Age" class="form-control" readonly />
+    <div class="nova-form-group">
+        <label asp-for="Email" class="nova-label">Email</label>
+        <input asp-for="Email" class="nova-input" readonly />
     </div>
 
-    <div class="form-group">
-        <label class="col-form-label" asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" readonly />
+    <div class="nova-form-group">
+        <label asp-for="Phone" class="nova-label">Phone</label>
+        <input asp-for="Phone" class="nova-input" readonly />
     </div>
 
-    <div class="form-group">
-        <label class="col-form-label" asp-for="Address"></label>
-        <input asp-for="Address" class="form-control" readonly />
+    <div class="nova-form-group">
+        <label asp-for="Address" class="nova-label">Address</label>
+        <input asp-for="Address" class="nova-input" readonly />
     </div>
 
-    <div class="form-group">
-        <label class="col-form-label" asp-for="Phone"></label>
-        <input asp-for="Phone" class="form-control" readonly />
+    <div class="nova-form-group">
+        <label asp-for="Salary" class="nova-label">Salary</label>
+        <input asp-for="Salary" class="nova-input" readonly />
     </div>
 
-    <div class="form-group">
-        <label class="col-form-label" asp-for="Salary"></label>
-        <input asp-for="Salary" class="form-control" readonly />
+    <div class="nova-form-group">
+        <label asp-for="IsActive" class="nova-label">Status</label>
+        <div>
+            @if (Model.IsActive)
+            {
+                <span class="nova-badge nova-badge-success">Active</span>
+            }
+            else
+            {
+                <span class="nova-badge nova-badge-danger">Inactive</span>
+            }
+        </div>
+        <input type="hidden" asp-for="IsActive" />
     </div>
 
-    <div class="form-group">
-        <input asp-for="IsActive" class="form-check" disabled />
-        <label class="col-form-label" asp-for="IsActive"></label>
+    <div class="nova-form-group">
+        <label asp-for="HiringDate" class="nova-label">Hiring Date</label>
+        <input asp-for="HiringDate" class="nova-input" readonly />
     </div>
 
-    <div class="form-group">
-        <input asp-for="IsDeleted" class="form-check" disabled />
-        <label class="col-form-label" asp-for="IsDeleted"></label>
+    <div class="nova-form-group">
+        <label asp-for="DepartmentName" class="nova-label">Department</label>
+        @if (Model.DepartmentName is not null)
+        {
+            <input asp-for="DepartmentName" class="nova-input" readonly />
+        }
+        else
+        {
+            <input value="No Department" class="nova-input nova-text-muted" readonly />
+            <input type="hidden" asp-for="DepartmentName" />
+        }
+        <input type="hidden" asp-for="DepartmentId" />
     </div>
-
-    <div class="form-group">
-        <label class="col-form-label" asp-for="HiringDate"></label>
-        <input asp-for="HiringDate" class="form-control" readonly />
-    </div>
-
-    <div class="form-group">
-        <label class="col-form-label" asp-for="CreateAt"></label>
-        <input asp-for="CreateAt" class="form-control" readonly />
-    </div>
-
-    <div class="form-group">
-        <label class="col-form-label" asp-for="DepartmentName"></label>
-        <input asp-for="DepartmentName" class="form-control" readonly />
-    </div>
-
-
-
 </div>

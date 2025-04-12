@@ -1,29 +1,40 @@
-﻿@model IEnumerable<Employee>
+﻿@model IEnumerable<EmployeeDTO>
 
 @foreach (var employee in Model)
 {
     <tr>
         <td>
-            <img src="~/files/images/@employee.ImageName" class="img-fluid w-100 h-100" />
+            <img src="~/files/images/@employee.ImageName" class="nova-rounded" style="width: 50px; height: 50px; object-fit: cover;" />
         </td>
-        <td>@employee.Name</td>
+        <td>@employee.EmpName</td>
         <td>@employee.Age</td>
         <td>@employee.Email</td>
         <td>@employee.Address</td>
         <td>@employee.Phone</td>
         <td>@Html.DisplayFor(M => employee.Salary)</td>
-        <td>@employee.IsActive</td>
-        <td>@employee.IsDeleted</td>
-        <td>@employee.HiringDate</td>
-        <td>@employee.CreateAt</td>
-        @if (employee.Department is not null)
-        {
-            <td>@employee.Department.Name</td>
-        }
-        else
-        {
-            <td>No Department</td>
-        }
-        <partial name="_ButtonsPartialView" model="@employee.Id.ToString()" />
+        <td>
+            @if (employee.IsActive)
+            {
+                <span class="nova-badge nova-badge-success">Active</span>
+            }
+            else
+            {
+                <span class="nova-badge nova-badge-danger">Inactive</span>
+            }
+        </td>
+        <td>@employee.HiringDate.ToString("yyyy-MM-dd")</td>
+        <td>
+            @if (employee.DepartmentName is not null)
+            {
+                @employee.DepartmentName
+            }
+            else
+            {
+                <span class="nova-text-muted">No Department</span>
+            }
+        </td>
+        <td>
+            <partial name="_SmallerButtonsPartialView" model="@employee.Id.ToString()" />
+        </td>
     </tr>
 }

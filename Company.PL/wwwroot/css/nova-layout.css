@@ -1,0 +1,200 @@
+﻿/* Nova Layout - Layout specific styles */
+
+/* Main Layout */
+.nova-app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.nova-app-header {
+    background-color: white;
+    box-shadow: var(--nova-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.nova-app-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    padding: 0 var(--nova-space-4);
+}
+
+.nova-brand {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    gap: var(--nova-space-2);
+    color: var(--nova-primary);
+}
+
+    .nova-brand i {
+        font-size: 1.5rem;
+    }
+
+.nova-topnav {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-4);
+}
+
+.nova-app-wrapper {
+    display: flex;
+    flex: 1;
+}
+
+.nova-sidebar {
+    width: 280px;
+    background-color: white;
+    border-right: 1px solid var(--nova-neutral-200);
+    padding: var(--nova-space-4);
+    height: calc(100vh - 64px);
+    position: sticky;
+    top: 64px;
+    overflow-y: auto;
+}
+
+.nova-sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nova-sidebar-item {
+    margin-bottom: var(--nova-space-1);
+}
+
+.nova-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: var(--nova-space-3);
+    padding: var(--nova-space-3) var(--nova-space-4);
+    color: var(--nova-neutral-700);
+    border-radius: var(--nova-radius);
+    transition: var(--nova-transition);
+    text-decoration: none;
+}
+
+    .nova-sidebar-link:hover {
+        background-color: var(--nova-neutral-100);
+        color: var(--nova-primary);
+        text-decoration: none;
+    }
+
+    .nova-sidebar-link.active {
+        background-color: var(--nova-primary-light);
+        color: var(--nova-primary-dark);
+        font-weight: 500;
+    }
+
+    .nova-sidebar-link i {
+        width: 20px;
+        text-align: center;
+    }
+
+.nova-sidebar-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--nova-neutral-500);
+    margin: var(--nova-space-6) 0 var(--nova-space-2) var(--nova-space-4);
+}
+
+.nova-main {
+    flex: 1;
+    padding: var(--nova-space-6);
+    background-color: var(--nova-neutral-50);
+}
+
+.nova-footer {
+    background-color: white;
+    border-top: 1px solid var(--nova-neutral-200);
+    padding: var(--nova-space-4);
+    text-align: center;
+    color: var(--nova-neutral-500);
+    font-size: 0.875rem;
+}
+
+/* Page Header */
+.nova-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--nova-space-6);
+}
+
+.nova-page-title {
+    margin: 0;
+}
+
+.nova-page-actions {
+    display: flex;
+    gap: var(--nova-space-2);
+}
+
+/* Global Link Styles */
+a {
+    color: var(--nova-primary);
+    text-decoration: none;
+    transition: var(--nova-transition);
+    cursor: pointer;
+}
+
+    a:hover {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    a.nova-btn:hover {
+        color: white;
+        text-decoration: none;
+    }
+
+    a.nova-btn-outline:hover {
+        color: inherit;
+        text-decoration: none;
+    }
+
+
+/* Responsive */
+@media (max-width: 992px) {
+    .nova-app-wrapper {
+        flex-direction: column;
+    }
+
+    .nova-sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--nova-neutral-200);
+        padding: var(--nova-space-2);
+    }
+
+    .nova-sidebar-menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--nova-space-1);
+    }
+
+    .nova-sidebar-header {
+        display: none;
+    }
+
+    .nova-sidebar-link {
+        padding: var(--nova-space-2);
+    }
+
+        .nova-sidebar-link span {
+            display: none;
+        }
+
+    .nova-main {
+        padding: var(--nova-space-4);
+    }
+}

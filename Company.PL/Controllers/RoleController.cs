@@ -147,7 +147,7 @@ namespace Company.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(string id, RoleToReturnDTO model)
+        public async Task<IActionResult> Delete([FromRoute] string id, RoleToReturnDTO model)
         {
             if (ModelState.IsValid)
             {
